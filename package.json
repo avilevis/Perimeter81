@@ -5,7 +5,7 @@
   "main": "server.js",
   "directories": {},
   "scripts": {
-    "preinstall": "",
+    "preinstall": "npm install lowdb",
     "start": "node server.js"
   },
   "repository": {
@@ -18,8 +18,11 @@
     "url": "https://github.com/Perimeter81/issues"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "~4.10.0",
     "geolite2": "~1.2.1",
+    "ip-address": "^5.9.2",
+    "lowdb": "^1.0.0",
     "maxmind": "~3.0.4"
   }
 }
