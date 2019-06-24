@@ -1,0 +1,25 @@
+{
+  "name": "Perimeter81",
+  "version": "1.0.0",
+  "description": "Perimeter 81",
+  "main": "server.js",
+  "directories": {},
+  "scripts": {
+    "preinstall": "",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Perimeter81.git"
+  },
+  "author": "",
+  "license": "Proprietary",
+  "bugs": {
+    "url": "https://github.com/Perimeter81/issues"
+  },
+  "dependencies": {
+    "express": "~4.10.0",
+    "geolite2": "~1.2.1",
+    "maxmind": "~3.0.4"
+  }
+}
