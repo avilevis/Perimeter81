@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const maxmind = require('maxmind');
+const ipRangeCheck = require("ip-range-check");
 const ipV4 = require('ip-address').Address4;
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', function (req, res) {
-  res.send('Hello World')
+  res.send('Perimeter81')
 })
  
 app.post('/resources', function (req, res) {
@@ -52,26 +53,14 @@ app.get('/resources*', function (req, res) {
   let params = req.query;
   
   if (!params.ip) return res.status(401).send({ error: 'no ip' });
-  getCityByIp(params.ip)
-  .then((city) => {
-    params.location = city;
-    params.name = req.url.slice(req.url.lastIndexOf('/')+1, req.url.indexOf('?'));
-    if (params.name == '') return res.status(403).send("name error");
-  })
-  .then(() => {
-    return db.get('authorization')
+  params.name = req.url.slice(req.url.lastIndexOf('/')+1, req.url.indexOf('?'));
+  if (params.name == '') return res.status(403).send("name error");
+  let record = db.get('authorization')
     .find({ 'name': params.name })
     .value();
-  })
-  .then((record) => {
-    if (!record) return res.status(403).send("not record with this name");
-    if (record.location != params.location) return res.status(403).send("access not allowed");
-    return res.status(200).send("Your password is: "+ record.context);
-  })
-  .catch((err) => {
-    console.log("err", err);
-    return res.status(401).send(err);
-  })
+  if (!record) return res.status(403).send("not record with this name");
+  if (!ipRangeCheck(params.ip, record.ipRange)) return res.status(403).send("access not allowed");
+  res.status(200).send('Your password is: '+record.context);
 })
 
 app.listen(8080, function(){
